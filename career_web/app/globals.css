@@ -232,6 +232,102 @@ html.light .cl-card:hover {
   line-height: 1.7;
 }
 
+.cl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cl-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cl-text);
+}
+
+.cl-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--cl-border);
+  background: var(--cl-main);
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  color: var(--cl-text);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cl-input::placeholder {
+  color: var(--cl-muted);
+}
+
+.cl-input:focus {
+  border-color: var(--cl-blue);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+}
+
+.cl-textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.cl-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.5rem;
+}
+
+.auth-card.cl-card:hover {
+  transform: none;
+}
+
+.legal-prose {
+  color: var(--cl-text);
+}
+
+.legal-prose .legal-section + .legal-section {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--cl-border);
+}
+
+.legal-prose h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--cl-text);
+  margin-bottom: 1rem;
+}
+
+.legal-prose p {
+  font-size: 0.975rem;
+  line-height: 1.75;
+  color: var(--cl-muted);
+}
+
+.legal-prose p + p {
+  margin-top: 1rem;
+}
+
+.legal-prose ul {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.legal-prose li {
+  font-size: 0.975rem;
+  line-height: 1.75;
+  color: var(--cl-muted);
+}
+
+.legal-prose li + li {
+  margin-top: 0.5rem;
+}
+
 .site-header {
   background: var(--header-bg);
   border-color: var(--cl-border);
@@ -239,6 +335,45 @@ html.light .cl-card:hover {
 
 .site-header__mobile {
   background: var(--header-bg);
+}
+
+.site-footer {
+  background: var(--cl-main);
+  color: var(--cl-text);
+}
+
+.site-footer__heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  color: var(--cl-text);
+}
+
+.site-footer__text {
+  color: var(--cl-muted);
+}
+
+.site-footer__link {
+  font-size: 0.875rem;
+  color: var(--cl-muted);
+  transition: color 0.2s ease;
+}
+
+.site-footer__link:hover {
+  color: #fff;
+}
+
+html.light .site-footer__link:hover {
+  color: #000;
+}
+
+.site-footer__divider {
+  border-top: 1px solid var(--cl-border);
+}
+
+.site-footer__bottom {
+  font-size: 0.875rem;
+  color: var(--cl-muted);
 }
 
 .brand-icon {
