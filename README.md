@@ -36,11 +36,11 @@ This repository is a monorepo containing the **marketing web app** and the **mob
 
 CareerLink Somalia helps:
 
-| Audience | Value |
-|---|---|
+| Audience                 | Value                                                                 |
+| ------------------------ | --------------------------------------------------------------------- |
 | **Students & graduates** | Discover opportunities, build profiles, apply, and track applications |
-| **Employers** | Post jobs, internships, and graduate programs; review applicants |
-| **Universities** | Connect students with employers, events, and career resources |
+| **Employers**            | Post jobs, internships, and graduate programs; review applicants      |
+| **Universities**         | Connect students with employers, events, and career resources         |
 
 The web application is a premium landing and marketing site built with **Next.js 16**, **TypeScript**, and **Tailwind CSS v4**, with dark/light theme support and modular page sections.
 
@@ -82,38 +82,38 @@ SoM-CaReeR-Link/
 
 ### Pages & Routes
 
-| Page | Route | Description |
-|---|---|---|
-| Home | `/` | Full landing page with all sections |
-| Opportunities | `/opportunities` | Browse all listings with search & filters |
-| For Students | `/students` | Student & graduate features |
-| For Employers | `/employers` | Employer hiring tools |
-| Universities | `/universities` | University partnership info |
-| Career Resources | `/resources` | CV, interview, and career guidance |
-| About Us | `/about` | Mission, testimonials, contact form |
-| Login | `/login` | Sign-in form |
-| Create Account | `/register` | Registration form (Student / Employer / University) |
-| Terms of Service | `/terms` | Full legal terms |
-| Privacy Policy | `/privacy` | Full privacy policy |
+| Page             | Route            | Description                                         |
+| ---------------- | ---------------- | --------------------------------------------------- |
+| Home             | `/`              | Full landing page with all sections                 |
+| Opportunities    | `/opportunities` | Browse all listings with search & filters           |
+| For Students     | `/students`      | Student & graduate features                         |
+| For Employers    | `/employers`     | Employer hiring tools                               |
+| Universities     | `/universities`  | University partnership info                         |
+| Career Resources | `/resources`     | CV, interview, and career guidance                  |
+| About Us         | `/about`         | Mission, testimonials, contact form                 |
+| Login            | `/login`         | Sign-in form                                        |
+| Create Account   | `/register`      | Registration form (Student / Employer / University) |
+| Terms of Service | `/terms`         | Full legal terms                                    |
+| Privacy Policy   | `/privacy`       | Full privacy policy                                 |
 
 Route constants live in `career_web/lib/routes.ts`.
 
 ### Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | [Next.js 16](https://nextjs.org) (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 |
-| Animation | [Framer Motion](https://www.framer.com/motion/) |
-| 3D | [Three.js](https://threejs.org), [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber), [@react-three/drei](https://github.com/pmndrs/drei) |
-| Icons | [Lucide React](https://lucide.dev) |
-| Font | Inter (via `next/font`) |
-| Images | Next.js `Image`, [Unsplash](https://unsplash.com) for opportunity covers |
+| Layer     | Technology                                                                                                                                         |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router)                                                                                                      |
+| Language  | TypeScript                                                                                                                                         |
+| Styling   | Tailwind CSS v4                                                                                                                                    |
+| Animation | [Framer Motion](https://www.framer.com/motion/)                                                                                                    |
+| 3D        | [Three.js](https://threejs.org), [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber), [@react-three/drei](https://github.com/pmndrs/drei) |
+| Icons     | [Lucide React](https://lucide.dev)                                                                                                                 |
+| Font      | Inter (via `next/font`)                                                                                                                            |
+| Images    | Next.js `Image`, [Unsplash](https://unsplash.com) for opportunity covers                                                                           |
 
 ### Getting Started
 
-**Prerequisites:** Node.js 20+ and npm
+**Prerequisites:** Node.js 20.9+ and npm
 
 ```bash
 cd career_web
@@ -172,11 +172,11 @@ career_web/
 
 CSS custom properties in `app/globals.css`:
 
-| Token | Dark | Light |
-|---|---|---|
-| `--cl-main` | `#050a14` | `#ffffff` |
-| `--cl-text` | `#f8fafc` | `#0b1f4b` |
-| `--cl-blue` | `#0d6efd` | `#0d6efd` |
+| Token        | Dark      | Light     |
+| ------------ | --------- | --------- |
+| `--cl-main`  | `#050a14` | `#ffffff` |
+| `--cl-text`  | `#f8fafc` | `#0b1f4b` |
+| `--cl-blue`  | `#0d6efd` | `#0d6efd` |
 | `--cl-muted` | `#94a3b8` | `#64748b` |
 
 Theme toggle is in the navbar. Preference is stored under `cl-theme` in `localStorage`.
@@ -188,25 +188,29 @@ Utility classes: `cl-container`, `cl-heading`, `cl-subtext`, `cl-card`, `cl-btn`
 Demo listings are defined in `lib/opportunities.ts`:
 
 ```ts
-import { OPPORTUNITIES, getFeaturedOpportunities, unsplashPhoto } from "@/lib/opportunities";
+import {
+  OPPORTUNITIES,
+  getFeaturedOpportunities,
+  unsplashPhoto,
+} from "@/lib/opportunities";
 ```
 
 Each opportunity supports:
 
 - `title`, `company`, `location`, `type`, `description`, `date`
-- Optional `image` (Unsplash URL or `/public` path)
+- Optional `image` (Unsplash URL or public URL path such as `/brand/icon.png`)
 - Optional `featured` flag for the home page
 
 Replace this file with API calls when the backend is ready.
 
 ### Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Production build |
-| `npm start` | Serve production build |
-| `npm run lint` | Run ESLint |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Production build         |
+| `npm start`     | Serve production build   |
+| `npm run lint`  | Run ESLint               |
 
 ---
 
@@ -228,12 +232,12 @@ See `mobile/README.md` for Expo-specific documentation.
 
 Located in `career_web/public/brand/`:
 
-| File | Usage |
-|---|---|
-| `icon.png` | Favicon, splash, white mark on black |
-| `CareerIcon.png` | Colored CL mark |
-| `careerlink-mark.svg` | SVG mark |
-| `careerlink-logo.svg` | Full wordmark SVG |
+| File                  | Usage                                |
+| --------------------- | ------------------------------------ |
+| `icon.png`            | Favicon, splash, white mark on black |
+| `CareerIcon.png`      | Colored CL mark                      |
+| `careerlink-mark.svg` | SVG mark                             |
+| `careerlink-logo.svg` | Full wordmark SVG                    |
 
 Primary brand colors: **CareerLink Blue** `#0D6EFD`, **Navy** `#0B1F4B`, deep background `#050A14`.
 

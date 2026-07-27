@@ -15,6 +15,14 @@ export function RegisterForm() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      setSubmitted(false);
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -23,12 +31,12 @@ export function RegisterForm() {
       <div className="text-center">
         <h1 className="cl-heading text-2xl sm:text-3xl">Create your account</h1>
         <p className="cl-subtext mt-2 text-sm sm:text-base">
-          Join CareerLink Somalia to discover opportunities, connect with employers and grow
-          your career.
+          Join CareerLink Somalia to discover opportunities, connect with
+          employers and grow your career.
         </p>
       </div>
 
-      <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>
+      <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="cl-field">
             <label className="cl-label" htmlFor="register-first">
@@ -143,7 +151,10 @@ export function RegisterForm() {
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href={routes.privacy} className="text-cl-blue hover:underline">
+            <Link
+              href={routes.privacy}
+              className="text-cl-blue hover:underline"
+            >
               Privacy Policy
             </Link>
             .
@@ -152,8 +163,8 @@ export function RegisterForm() {
 
         {submitted && (
           <p className="rounded-lg border border-cl-blue/30 bg-cl-blue-light/40 px-4 py-3 text-sm text-cl-text">
-            Registration will open fully once accounts are enabled. We&apos;re glad you&apos;re
-            joining CareerLink Somalia.
+            Registration will open fully once accounts are enabled. We&apos;re
+            glad you&apos;re joining CareerLink Somalia.
           </p>
         )}
 
@@ -164,7 +175,10 @@ export function RegisterForm() {
 
       <p className="mt-6 text-center text-sm text-cl-muted">
         Already have an account?{" "}
-        <Link href={routes.login} className="font-semibold text-cl-blue hover:underline">
+        <Link
+          href={routes.login}
+          className="font-semibold text-cl-blue hover:underline"
+        >
           Sign in
         </Link>
       </p>

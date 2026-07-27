@@ -31,7 +31,10 @@ function GooglePlayLogo({ className = "" }: { className?: string }) {
         fill="#FBBC04"
         d="m18.8 14.3 7.4-4.3c.8-.5.8-1.6 0-2.1l-7.4-4.3-4.7 5.4z"
       />
-      <path fill="#4285F4" d="M2.5 30.6c.5.3 1.1.2 1.5-.2L18.8 14.3 14.1 9.6z" />
+      <path
+        fill="#4285F4"
+        d="M2.5 30.6c.5.3 1.1.2 1.5-.2L18.8 14.3 14.1 9.6z"
+      />
       <path
         fill="#34A853"
         d="M2.5 1.4C1.8.9 1 1.1.5 1.8.2 2.3 0 2.9 0 3.5v25c0 .6.2 1.2.5 1.7.5.7 1.3.9 2 .5L14.1 9.6z"
@@ -55,8 +58,8 @@ export function MobileShowcase() {
             Anywhere.
           </h2>
           <p className="cl-subtext mt-4 max-w-md text-base">
-            Discover opportunities, apply, track applications and connect with employers
-            directly from your phone.
+            Discover opportunities, apply, track applications and connect with
+            employers directly from your phone.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -64,7 +67,7 @@ export function MobileShowcase() {
             <a
               href={routes.register}
               className="inline-flex h-12 items-center gap-2.5 rounded-[8px] border border-white/20 bg-black px-3.5 py-2 text-white shadow-md transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-cl-blue sm:h-[52px] sm:px-4"
-              aria-label="Download on the App Store"
+              aria-label="Create your CareerLink account"
             >
               <AppleLogo className="h-7 w-auto shrink-0 sm:h-8" />
               <span className="flex flex-col items-start leading-none">
@@ -72,7 +75,7 @@ export function MobileShowcase() {
                   Download on the
                 </span>
                 <span className="mt-0.5 text-[17px] font-semibold tracking-tight sm:text-[18px]">
-                  App Store
+                  Create account
                 </span>
               </span>
             </a>
@@ -81,7 +84,7 @@ export function MobileShowcase() {
             <a
               href={routes.register}
               className="inline-flex h-12 items-center gap-2.5 rounded-[8px] border border-white/20 bg-black px-3.5 py-2 text-white shadow-md transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-cl-blue sm:h-[52px] sm:px-4"
-              aria-label="Get it on Google Play"
+              aria-label="Register for CareerLink"
             >
               <GooglePlayLogo className="h-7 w-7 shrink-0 sm:h-8 sm:w-8" />
               <span className="flex flex-col items-start leading-none">
@@ -89,7 +92,7 @@ export function MobileShowcase() {
                   Get it on
                 </span>
                 <span className="mt-0.5 text-[17px] font-semibold tracking-tight sm:text-[18px]">
-                  Google Play
+                  Register now
                 </span>
               </span>
             </a>

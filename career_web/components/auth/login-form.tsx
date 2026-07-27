@@ -9,6 +9,14 @@ export function LoginForm() {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      setSubmitted(false);
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -21,7 +29,7 @@ export function LoginForm() {
         </p>
       </div>
 
-      <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>
+      <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
         <div className="cl-field">
           <label className="cl-label" htmlFor="login-email">
             Email address
@@ -43,7 +51,7 @@ export function LoginForm() {
               Password
             </label>
             <Link
-              href="#forgot-password"
+              href="mailto:hello@careerlink.so?subject=Password%20reset%20request"
               className="text-xs font-medium text-cl-blue hover:underline"
             >
               Forgot password?
@@ -71,8 +79,8 @@ export function LoginForm() {
 
         {submitted && (
           <p className="rounded-lg border border-cl-blue/30 bg-cl-blue-light/40 px-4 py-3 text-sm text-cl-text">
-            Sign-in will connect to your account once authentication is live. Thank you for
-            trying CareerLink Somalia.
+            Sign-in will connect to your account once authentication is live.
+            Thank you for trying CareerLink Somalia.
           </p>
         )}
 
@@ -83,7 +91,10 @@ export function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-cl-muted">
         Don&apos;t have an account?{" "}
-        <Link href={routes.register} className="font-semibold text-cl-blue hover:underline">
+        <Link
+          href={routes.register}
+          className="font-semibold text-cl-blue hover:underline"
+        >
           Create account
         </Link>
       </p>

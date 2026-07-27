@@ -7,10 +7,10 @@ type SiteShellProps = {
 
 export function SiteShell({ children }: SiteShellProps) {
   return (
-    <main className="min-h-screen bg-cl-main text-cl-text">
+    <div className="min-h-screen bg-cl-main text-cl-text">
       <Navbar />
-      {children}
+      <main>{children}</main>
       <Footer />
-    </main>
+    </div>
   );
 }
