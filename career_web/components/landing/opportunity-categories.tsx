@@ -9,21 +9,25 @@ const CATEGORIES = [
     icon: Briefcase,
     title: "Internships",
     description: "Gain practical experience and build professional skills.",
+    filter: "Internship" as const,
   },
   {
     icon: Workflow,
     title: "Entry-Level Jobs",
     description: "Find opportunities designed for graduates and young professionals.",
+    filter: "Entry-Level" as const,
   },
   {
     icon: GraduationCap,
     title: "Graduate Programs",
     description: "Start your professional journey with structured graduate programs.",
+    filter: "Graduate Program" as const,
   },
   {
     icon: Calendar,
     title: "Career Events",
     description: "Attend career fairs, workshops, networking events and training programs.",
+    filter: "Career Event" as const,
   },
 ];
 
@@ -38,9 +42,12 @@ export function OpportunityCategories() {
           />
         </MotionSection>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.map(({ icon: Icon, title, description }, i) => (
+          {CATEGORIES.map(({ icon: Icon, title, description, filter }, i) => (
             <MotionSection key={title} delay={i * 0.07}>
-              <Link href={routes.featured} className="cl-card block p-6">
+              <Link
+                href={`${routes.opportunities}?type=${encodeURIComponent(filter)}`}
+                className="cl-card block p-6"
+              >
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-cl-blue-light text-cl-blue">
                   <Icon size={22} />
                 </div>

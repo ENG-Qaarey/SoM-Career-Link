@@ -1,3 +1,4 @@
+import { routes } from "@/lib/routes";
 import { MotionSection } from "@/components/ui/motion-section";
 import { MobileAppPhones } from "./mockups";
 
@@ -61,7 +62,7 @@ export function MobileShowcase() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             {/* Official-style App Store badge */}
             <a
-              href="#join"
+              href={routes.register}
               className="inline-flex h-12 items-center gap-2.5 rounded-[8px] border border-white/20 bg-black px-3.5 py-2 text-white shadow-md transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-cl-blue sm:h-[52px] sm:px-4"
               aria-label="Download on the App Store"
             >
@@ -78,7 +79,7 @@ export function MobileShowcase() {
 
             {/* Official-style Google Play badge */}
             <a
-              href="#join"
+              href={routes.register}
               className="inline-flex h-12 items-center gap-2.5 rounded-[8px] border border-white/20 bg-black px-3.5 py-2 text-white shadow-md transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-cl-blue sm:h-[52px] sm:px-4"
               aria-label="Get it on Google Play"
             >

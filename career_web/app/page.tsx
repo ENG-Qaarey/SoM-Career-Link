@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/landing/navbar";
+import { SiteShell } from "@/components/landing/site-shell";
 import { Hero } from "@/components/landing/hero";
 import { Stats } from "@/components/landing/stats";
 import { OpportunityCategories } from "@/components/landing/opportunity-categories";
@@ -14,12 +14,10 @@ import { CareerResources } from "@/components/landing/career-resources";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Partners } from "@/components/landing/partners";
 import { FinalCTA } from "@/components/landing/final-cta";
-import { Footer } from "@/components/landing/footer";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-cl-main text-cl-text">
-      <Navbar />
+    <SiteShell>
       <Hero />
       <Stats />
       <OpportunityCategories />
@@ -35,7 +33,6 @@ export default function HomePage() {
       <Testimonials />
       <Partners />
       <FinalCTA />
-      <Footer />
-    </main>
+    </SiteShell>
   );
 }
