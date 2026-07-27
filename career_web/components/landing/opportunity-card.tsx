@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Bookmark, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { getOpportunityImage, type Opportunity } from "@/lib/opportunities";
 
 type OpportunityCardProps = {
@@ -7,7 +7,10 @@ type OpportunityCardProps = {
   showImage?: boolean;
 };
 
-export function OpportunityCard({ job, showImage = true }: OpportunityCardProps) {
+export function OpportunityCard({
+  job,
+  showImage = true,
+}: OpportunityCardProps) {
   const imageSrc = getOpportunityImage(job);
   const imageAlt = job.imageAlt ?? `${job.title} — ${job.company}`;
 
@@ -36,17 +39,12 @@ export function OpportunityCard({ job, showImage = true }: OpportunityCardProps)
               {job.initials}
             </div>
             <div>
-              <h3 className="text-lg font-semibold leading-snug text-cl-text">{job.title}</h3>
+              <h3 className="text-lg font-semibold leading-snug text-cl-text">
+                {job.title}
+              </h3>
               <p className="text-sm text-cl-muted">{job.company}</p>
             </div>
           </div>
-          <button
-            type="button"
-            aria-label={`Save ${job.title}`}
-            className="rounded-lg p-2 text-cl-muted transition hover:bg-cl-blue-light hover:text-cl-blue"
-          >
-            <Bookmark size={18} />
-          </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-cl-muted">
           <span className="inline-flex items-center gap-1">
@@ -60,7 +58,9 @@ export function OpportunityCard({ job, showImage = true }: OpportunityCardProps)
           )}
           <span>{job.date}</span>
         </div>
-        <p className="mt-3 flex-1 text-sm leading-relaxed text-cl-muted">{job.description}</p>
+        <p className="mt-3 flex-1 text-sm leading-relaxed text-cl-muted">
+          {job.description}
+        </p>
       </div>
     </article>
   );

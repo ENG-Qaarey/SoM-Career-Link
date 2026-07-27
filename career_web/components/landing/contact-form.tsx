@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 const SUBJECTS = [
   "General inquiry",
   "Account support",
@@ -12,11 +10,14 @@ const SUBJECTS = [
 ] as const;
 
 export function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
-
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    const form = event.currentTarget;
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
   }
 
   return (
@@ -26,7 +27,7 @@ export function ContactForm() {
         Fill out the form below and we&apos;ll respond as soon as we can.
       </p>
 
-      <form className="mt-6 space-y-5" onSubmit={handleSubmit} noValidate>
+      <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="cl-field">
             <label className="cl-label" htmlFor="contact-name">
@@ -62,7 +63,12 @@ export function ContactForm() {
           <label className="cl-label" htmlFor="contact-subject">
             Subject
           </label>
-          <select id="contact-subject" name="subject" required className="cl-input cl-select">
+          <select
+            id="contact-subject"
+            name="subject"
+            required
+            className="cl-input cl-select"
+          >
             <option value="">Select a topic</option>
             {SUBJECTS.map((subject) => (
               <option key={subject} value={subject}>
@@ -86,14 +92,15 @@ export function ContactForm() {
           />
         </div>
 
-        {submitted && (
-          <p className="rounded-lg border border-cl-blue/30 bg-cl-blue-light/40 px-4 py-3 text-sm text-cl-text">
-            Thank you for reaching out. Our team will review your message and get back to you
-            at the email address you provided.
-          </p>
-        )}
+        <p className="rounded-lg border border-dashed border-cl-border bg-cl-main/50 px-4 py-3 text-sm text-cl-muted">
+          This contact form is currently demo-only and is not connected to a
+          live delivery service.
+        </p>
 
-        <button type="submit" className="cl-btn cl-btn-primary w-full sm:w-auto">
+        <button
+          type="submit"
+          className="cl-btn cl-btn-primary w-full sm:w-auto"
+        >
           Send message
         </button>
       </form>

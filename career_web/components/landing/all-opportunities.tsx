@@ -22,9 +22,11 @@ export function AllOpportunities() {
 
   useEffect(() => {
     const type = searchParams.get("type");
-    if (type && OPPORTUNITY_TYPES.includes(type as OpportunityType)) {
-      setActiveFilter(type as OpportunityType);
-    }
+    setActiveFilter(
+      type && OPPORTUNITY_TYPES.includes(type as OpportunityType)
+        ? (type as OpportunityType)
+        : "All",
+    );
   }, [searchParams]);
 
   const filtered = useMemo(() => {
@@ -49,10 +51,12 @@ export function AllOpportunities() {
       <div className="cl-container">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h2 className="cl-heading text-2xl sm:text-3xl">All Opportunities</h2>
+            <h2 className="cl-heading text-2xl sm:text-3xl">
+              All Opportunities
+            </h2>
             <p className="cl-subtext mt-2 text-sm sm:text-base">
-              Browse {OPPORTUNITIES.length} example listings across internships, jobs,
-              graduate programs and career events.
+              Browse {OPPORTUNITIES.length} example listings across internships,
+              jobs, graduate programs and career events.
             </p>
           </div>
           <label className="relative w-full max-w-md">
@@ -62,6 +66,7 @@ export function AllOpportunities() {
             />
             <input
               type="search"
+              aria-label="Search opportunities"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search by title, company or location..."
@@ -90,7 +95,9 @@ export function AllOpportunities() {
                 }`}
               >
                 {filter}
-                <span className={`ml-1.5 ${isActive ? "text-blue-100" : "text-cl-muted"}`}>
+                <span
+                  className={`ml-1.5 ${isActive ? "text-blue-100" : "text-cl-muted"}`}
+                >
                   ({count})
                 </span>
               </button>
@@ -112,7 +119,9 @@ export function AllOpportunities() {
           </div>
         ) : (
           <div className="mt-10 rounded-2xl border border-dashed border-cl-border bg-cl-main/50 px-6 py-14 text-center">
-            <p className="text-lg font-semibold text-cl-text">No opportunities found</p>
+            <p className="text-lg font-semibold text-cl-text">
+              No opportunities found
+            </p>
             <p className="mt-2 text-sm text-cl-muted">
               Try a different search term or clear your filters.
             </p>
