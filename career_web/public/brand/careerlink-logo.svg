@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 56" fill="none" role="img" aria-label="CareerLink Somalia">
+  <rect x="2" y="8" width="40" height="40" rx="10" fill="#0D6EFD"/>
+  <path d="M14 28c0-4.4 3.6-8 8-8h4.5a1.5 1.5 0 0 1 0 3H22a5 5 0 0 0 0 10h4.5a1.5 1.5 0 0 1 0 3H22c-4.4 0-8-3.6-8-8Z" fill="#fff"/>
+  <path d="M30 28c0 4.4-3.6 8-8 8h-4.5a1.5 1.5 0 0 1 0-3H22a5 5 0 0 0 0-10h4.5a1.5 1.5 0 0 1 0 3H22c4.4 0 8 3.6 8 8Z" fill="#fff" opacity=".9"/>
+  <text x="54" y="26" font-family="Poppins, system-ui, sans-serif" font-size="18" font-weight="700" fill="#0B1F4B">CareerLink</text>
+  <text x="54" y="44" font-family="Poppins, system-ui, sans-serif" font-size="12" font-weight="600" fill="#0D6EFD" letter-spacing="0.12em">SOMALIA</text>
+</svg>
