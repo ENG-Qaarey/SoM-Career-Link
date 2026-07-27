@@ -2,5 +2,8 @@
   "buildCommand": "cd career_web && npm run build",
   "outputDirectory": "career_web/.next",
   "installCommand": "cd career_web && npm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "projectSettings": {
+    "rootDirectory": "career_web"
+  }
 }
