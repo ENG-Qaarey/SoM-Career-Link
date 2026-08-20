@@ -13,8 +13,8 @@ const WHY = [
   { icon: Briefcase, title: "Real Opportunities", text: "Discover internships, jobs and graduate programs from employers." },
   { icon: Sparkles, title: "Easy to Use", text: "A simple platform designed for students, graduates and employers." },
   { icon: Lightbulb, title: "Career Growth", text: "Access opportunities and resources designed to support your journey." },
-  { icon: Network, title: "Trusted Network", text: "Connect universities, companies, employers and emerging professionals." },
-  { icon: MessageCircle, title: "Stay Updated", text: "Receive updates about applications, opportunities and career events." },
+  { icon: Network, title: "Top 7 Network", text: "Pin seven important professional connections on your profile — unique to CareerLink Somalia." },
+  { icon: MessageCircle, title: "Real-Time Chat", text: "Talk with employers, applicants and partners to turn opportunities into relationships." },
   { icon: Users, title: "Built for Somalia", text: "A career platform designed to support Somalia’s next generation." },
 ];
 
