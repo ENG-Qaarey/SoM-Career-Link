@@ -11,6 +11,8 @@ const FEATURES = [
   "Access candidate profiles",
   "Manage applications",
   "Build your employer profile",
+  "Message applicants in real time",
+  "Showcase your company Top 7 connections",
   "Connect with universities",
 ];
 

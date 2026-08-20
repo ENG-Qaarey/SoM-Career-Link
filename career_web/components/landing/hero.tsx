@@ -22,9 +22,9 @@ export function Hero() {
             Discover Your <span className="hero-highlight">Next Opportunity</span>.
           </h1>
           <p className="cl-subtext mt-5 max-w-xl text-base sm:text-lg">
-            CareerLink Somalia connects students and graduates with internships, graduate
-            programs, entry-level jobs, employers, universities, and career opportunities
-            across Somalia.
+            CareerLink Somalia connects students, graduates, companies and universities —
+            with internships, jobs, Top 7 professional connections, and real-time chat in
+            one place.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button href={routes.opportunities}>

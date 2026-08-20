@@ -2,19 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Home, Briefcase, Users, Landmark, BookOpen, Info } from "lucide-react";
 import { routes } from "@/lib/routes";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_LINKS = [
-  { label: "Home", href: routes.home },
-  { label: "Opportunities", href: routes.opportunities },
-  { label: "For Students", href: routes.students },
-  { label: "For Employers", href: routes.employers },
-  { label: "Universities", href: routes.universities },
-  { label: "Career Resources", href: routes.resources },
-  { label: "About Us", href: routes.about },
+  { label: "Home", href: routes.home, icon: Home },
+  { label: "Opportunities", href: routes.opportunities, icon: Briefcase },
+  { label: "For Students & Employers", href: routes.studentsEmployers, icon: Users },
+  { label: "Universities", href: routes.universities, icon: Landmark },
+  { label: "Career Resources", href: routes.resources, icon: BookOpen },
+  { label: "About Us", href: routes.about, icon: Info },
 ];
 
 export function Navbar() {
@@ -49,8 +48,9 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-lg px-2.5 py-2 text-[0.82rem] font-medium text-cl-muted transition hover:bg-cl-blue-light hover:text-cl-blue"
+              className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-[0.82rem] font-medium text-cl-muted transition hover:bg-cl-blue-light hover:text-cl-blue"
             >
+              <link.icon size={15} strokeWidth={2.2} />
               {link.label}
             </Link>
           ))}
@@ -87,9 +87,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-cl-text hover:bg-cl-blue-light"
+                className="inline-flex items-center gap-2.5 rounded-lg px-3 py-3 text-sm font-medium text-cl-text hover:bg-cl-blue-light"
                 onClick={() => setOpen(false)}
               >
+                <link.icon size={17} strokeWidth={2.2} className="text-cl-blue" />
                 {link.label}
               </Link>
             ))}

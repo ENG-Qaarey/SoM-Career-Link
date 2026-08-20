@@ -18,10 +18,10 @@ const COLUMNS = [
     title: "CareerLink",
     links: [
       { label: "About Us", href: routes.about },
-      { label: "For Students", href: routes.students },
-      { label: "For Employers", href: routes.employers },
+      { label: "For Students & Employers", href: routes.studentsEmployers },
       { label: "For Universities", href: routes.universities },
       { label: "Career Resources", href: routes.resources },
+      { label: "Top 7", href: routes.top7 },
     ],
   },
   {

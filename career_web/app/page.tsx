@@ -8,6 +8,7 @@ import { StudentsSection } from "@/components/landing/students-section";
 import { EmployersSection } from "@/components/landing/employers-section";
 import { UniversitiesSection } from "@/components/landing/universities-section";
 import { CareerNetworkSection } from "@/components/landing/career-network-section";
+import { TopSevenSection } from "@/components/landing/top-seven-section";
 import { WhyCareerLink } from "@/components/landing/why-careerlink";
 import { MobileShowcase } from "@/components/landing/mobile-showcase";
 import { CareerResources } from "@/components/landing/career-resources";
@@ -27,6 +28,7 @@ export default function HomePage() {
       <EmployersSection />
       <UniversitiesSection />
       <CareerNetworkSection />
+      <TopSevenSection />
       <WhyCareerLink />
       <MobileShowcase />
       <CareerResources />

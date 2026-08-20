@@ -8,7 +8,8 @@ const FEATURES = [
   "Upload and manage your CV",
   "Save interesting opportunities",
   "Track your applications",
-  "Connect with employers",
+  "Connect with employers through real-time chat",
+  "Showcase your Top 7 professional connections",
   "Discover career events",
   "Build your professional profile",
 ];
