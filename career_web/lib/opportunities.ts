@@ -20,7 +20,7 @@ export type Opportunity = {
 };
 
 /** Unsplash photo URL — demo covers until listings come from the API */
-export function unsplashPhoto(photoId: string, width = 800): string {
+export function unsplashPhoto(photoId: string, width = 1600): string {
   return `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=${width}&q=80`;
 }
 

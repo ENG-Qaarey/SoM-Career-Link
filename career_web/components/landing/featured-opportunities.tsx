@@ -18,7 +18,7 @@ export function FeaturedOpportunities({ showViewAll = true }: { showViewAll?: bo
             subtitle="Explore example opportunity cards that represent the CareerLink experience."
           />
         </MotionSection>
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {jobs.map((job, i) => (
             <MotionSection key={job.id} delay={i * 0.06}>
               <OpportunityCard job={job} />
