@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "CareerLink Somalia",
+    "slug": "careerlink-somalia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "careerlink",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#eef5ff"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "so.careerlink.mobile"
+    },
+    "android": {
+      "package": "so.careerlink.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#eef5ff",
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#eef5ff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

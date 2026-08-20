@@ -17,7 +17,7 @@ export function OpportunityCard({
   return (
     <article className="cl-card flex h-full flex-col overflow-hidden p-0">
       {showImage && (
-        <div className="relative aspect-[16/10] w-full shrink-0 bg-cl-main">
+        <div className="relative aspect-[21/9] w-full shrink-0 bg-cl-main">
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -32,14 +32,14 @@ export function OpportunityCard({
         </div>
       )}
 
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
+      <div className="flex flex-1 flex-col p-4 sm:p-4">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cl-blue-light text-sm font-bold text-cl-blue">
+          <div className="flex items-start gap-2.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cl-blue-light text-sm font-bold text-cl-blue">
               {job.initials}
             </div>
             <div>
-              <h3 className="text-lg font-semibold leading-snug text-cl-text">
+              <h3 className="text-base font-semibold leading-snug text-cl-text">
                 {job.title}
               </h3>
               <p className="text-sm text-cl-muted">{job.company}</p>
