@@ -71,7 +71,7 @@ export default function LoginScreen() {
 
     setTimeout(() => {
       setIsLoading(false);
-      router.replace("/home");
+      router.replace("/(tabs)/home");
     }, 1200);
   };
 
@@ -231,7 +231,7 @@ export default function LoginScreen() {
               isDark ? styles.googleBtnDark : styles.googleBtnLight,
               pressed && styles.googleBtnPressed,
             ]}
-            onPress={() => handleSubmit()}
+            onPress={() => router.replace("/(tabs)/home")}
           >
             <GoogleIcon size={19} />
             <Text style={[styles.googleBtnText, isDark ? styles.textDark : styles.textLight]}>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth/auth-shell";
-import { LoginForm } from "@/components/auth/login-form";
+import AuthSectionOne from "@/components/ui/auth-section-1";
 
 export const metadata: Metadata = {
   title: "Login | CareerLink Somalia",
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <AuthShell>
-      <LoginForm />
+    <AuthShell footer={false} navbar={false}>
+      <AuthSectionOne mode="login" />
     </AuthShell>
   );
 }

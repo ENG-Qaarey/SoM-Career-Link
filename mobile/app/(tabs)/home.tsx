@@ -1,420 +1,470 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
+  FlatList,
+  Pressable,
+  RefreshControl,
   StyleSheet,
   Text,
-  View,
   TextInput,
-  Pressable,
-  ScrollView,
+  View,
 } from "react-native";
-import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import Animated, { FadeIn, Layout } from "react-native-reanimated";
+import { useApp } from "@/context/app-provider";
+import { buildFeed, buildFollowingFeed, type FeedItem } from "@/lib/feed";
+import { FeedPostCard } from "@/components/feed-post";
+import { PostComposer } from "@/components/post-composer";
+import { CreatePostModal } from "@/components/create-post-modal";
+import { PostComments } from "@/components/post-comments";
+import { PostMoreMenu, PostShareSheet } from "@/components/post-more-menu";
+import { PostDetailModal } from "@/components/post-detail-modal";
+import { CURRENT_USER, type PostKind, type PostVisibility, type Post } from "@/lib/data";
 
-type JobItem = {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  initials: string;
-  color: string;
-  type: string;
-};
-
-const RECOMMENDED_JOBS: JobItem[] = [
-  {
-    id: "1",
-    initials: "BW",
-    color: "#3b82f6",
-    title: "Frontend Developer Intern",
-    company: "BlueWave Technologies",
-    location: "Mogadishu, Somalia",
-    type: "Internship",
-  },
-  {
-    id: "2",
-    initials: "IB",
-    color: "#0d9488",
-    title: "Graduate Trainee Program",
-    company: "IBS Bank",
-    location: "Mogadishu, Somalia",
-    type: "Full-time",
-  },
-  {
-    id: "3",
-    initials: "CL",
-    color: "#8b5cf6",
-    title: "Mobile Developer Intern",
-    company: "CareerLink Lab",
-    location: "Hargeisa, Somalia",
-    type: "Internship",
-  },
-];
-
-const CATEGORIES = [
-  { icon: "briefcase" as const, label: "Internships" },
-  { icon: "home" as const, label: "Jobs" },
-  { icon: "award" as const, label: "Programs" },
-  { icon: "calendar" as const, label: "Events" },
-];
+type TabKind = "foryou" | "following";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const {
+    posts,
+    connectedIds,
+    createPost,
+    getPost,
+    unreadNotifications,
+    getComments,
+    addComment,
+    toggleCommentLike,
+    updateComment,
+    deleteComment,
+    reportPost,
+  } = useApp();
 
-  const handleLogout = () => {
-    router.replace("/");
+  const [tab, setTab] = useState<TabKind>("foryou");
+  const [search, setSearch] = useState("");
+  const [composerVisible, setComposerVisible] = useState(false);
+  const [createPostModalVisible, setCreatePostModalVisible] = useState(false);
+  const [editing, setEditing] = useState<null | {
+    id: string;
+    content: string;
+    kind: PostKind;
+    visibility: PostVisibility;
+  }>(null);
+  const [commentsFor, setCommentsFor] = useState<string | null>(null);
+  const [moreFor, setMoreFor] = useState<{ id: string; authorId: string } | null>(null);
+  const [shareFor, setShareFor] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [detailPost, setDetailPost] = useState<Post | null>(null);
+
+  const feedItems: FeedItem[] = useMemo(() => {
+    const base = tab === "foryou" ? buildFeed(posts) : buildFollowingFeed(posts, connectedIds);
+    if (!search.trim()) return base;
+    const q = search.trim().toLowerCase();
+    return base.filter((item) => {
+      if (item.type !== "post") return false;
+      return (
+        item.content.toLowerCase().includes(q) ||
+        item.authorName.toLowerCase().includes(q) ||
+        (item.hashtags ?? []).some((h) => h.tag.toLowerCase().includes(q))
+      );
+    });
+  }, [tab, posts, connectedIds, search]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 800);
+  };
+
+  const openEdit = (postId: string) => {
+    const p = getPost(postId);
+    if (!p) return;
+    setEditing({ id: p.id, content: p.content, kind: p.kind, visibility: p.visibility });
+    setComposerVisible(true);
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-
-      {/* Header bar */}
-      <View style={[styles.header, { paddingTop: insets.top + 6 }]}>
-        <View style={styles.headerLeft}>
-          <Image
-            source={require("@/assets/images/icon.png")}
-            style={styles.headerLogo}
-            contentFit="contain"
-          />
-          <Text style={styles.headerTitle}>CareerLink</Text>
+      <View style={[styles.top, { paddingTop: insets.top + 6 }]}>
+        <View style={styles.topRow}>
+          <View style={[styles.meAvatar, { backgroundColor: CURRENT_USER.color }]}>
+            <Text style={styles.meInitials}>{CURRENT_USER.initials}</Text>
+          </View>
+          <View style={styles.searchBar}>
+            <Feather name="search" size={16} color="#94a3b8" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search CareerLink"
+              placeholderTextColor="#94a3b8"
+              value={search}
+              onChangeText={setSearch}
+            />
+          </View>
+          <Pressable style={styles.bell} hitSlop={8} onPress={() => router.push("/notifications")}>
+            <Feather name="bell" size={22} color="#0f172a" />
+            {unreadNotifications > 0 ? <View style={styles.bellDot} /> : null}
+          </Pressable>
         </View>
-        <View style={styles.headerRight}>
-          <Pressable style={styles.iconButton}>
-            <Feather name="bell" size={17} color="#0b1f4b" />
-            <View style={styles.bellDot} />
-          </Pressable>
-          <Pressable style={styles.iconButton} onPress={handleLogout}>
-            <Feather name="log-out" size={17} color="#0b1f4b" />
-          </Pressable>
+
+        <View style={styles.switcher}>
+          {(["foryou", "following"] as TabKind[]).map((t) => (
+            <Pressable
+              key={t}
+              onPress={() => setTab(t)}
+              style={[styles.switchItem, tab === t && styles.switchItemOn]}
+            >
+              <Text style={[styles.switchText, tab === t && styles.switchTextOn]}>
+                {t === "foryou" ? "For you" : "Following"}
+              </Text>
+              {tab === t ? <View style={styles.switchUnderline} /> : null}
+            </Pressable>
+          ))}
+          <View style={styles.switchSpacer} />
         </View>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
+      <FlatList
+        data={feedItems}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-      >
-        {/* Welcome Text */}
-        <View style={styles.welcomeSection}>
-          <Text style={styles.greeting}>Hello, Ahmed 👋</Text>
-          <Text style={styles.subtitle}>Ready to take the next step in your career?</Text>
-        </View>
-
-        {/* Search Bar */}
-        <View style={styles.searchWrapper}>
-          <Feather name="search" size={16} color="#94a3b8" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search jobs, internships, programs..."
-            placeholderTextColor="#94a3b8"
-            value={search}
-            onChangeText={setSearch}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#2563eb"
+            colors={["#2563eb"]}
           />
-        </View>
-
-        {/* Promo Banner */}
-        <View style={styles.banner}>
-          <View style={styles.bannerInfo}>
-            <Text style={styles.bannerTitle}>Find Opportunities That Match Your Skills</Text>
-            <Pressable style={styles.bannerButton}>
-              <Text style={styles.bannerButtonText}>Explore Now</Text>
-            </Pressable>
-          </View>
-          <View style={styles.bannerArt}>
-            <Feather name="trending-up" size={40} color="rgba(255, 255, 255, 0.3)" />
-          </View>
-        </View>
-
-        {/* Categories Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <View style={styles.categoriesGrid}>
-            {CATEGORIES.map((item, idx) => (
-              <View key={idx} style={styles.categoryItem}>
-                <View style={styles.categoryIconWrapper}>
-                  <Feather name={item.icon} size={18} color="#0d6efd" />
-                </View>
-                <Text style={styles.categoryLabel}>{item.label}</Text>
+        }
+        ListHeaderComponent={
+          <Animated.View entering={FadeIn.duration(200)} layout={Layout}>
+            <View style={styles.composer}>
+              <View style={[styles.meAvatarSmall, { backgroundColor: CURRENT_USER.color }]}>
+                <Text style={styles.meInitialsSmall}>{CURRENT_USER.initials}</Text>
               </View>
-            ))}
-          </View>
-        </View>
-
-        {/* Recommended Jobs */}
-        <View style={styles.sectionContainer}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recommended for you</Text>
-            <Pressable>
-              <Text style={styles.seeAllText}>See all</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.jobsList}>
-            {RECOMMENDED_JOBS.map((job) => (
-              <View key={job.id} style={styles.jobCard}>
-                <View style={[styles.jobLogo, { backgroundColor: `${job.color}15` }]}>
-                  <Text style={[styles.jobLogoText, { color: job.color }]}>{job.initials}</Text>
-                </View>
-                <View style={styles.jobInfo}>
-                  <Text style={styles.jobTitle}>{job.title}</Text>
-                  <Text style={styles.jobCompany}>{job.company}</Text>
-                  <View style={styles.jobMeta}>
-                    <Feather name="map-pin" size={11} color="#94a3b8" />
-                    <Text style={styles.jobLocation}>{job.location}</Text>
-                  </View>
-                  <View style={styles.tagWrapper}>
-                    <Text style={styles.jobTag}>{job.type}</Text>
-                  </View>
-                </View>
-                <Pressable style={styles.bookmarkButton}>
-                  <Feather name="bookmark" size={16} color="#64748b" />
+              <Pressable
+                style={styles.composerInput}
+                onPress={() => { setEditing(null); setCreatePostModalVisible(true); }}
+              >
+                <Text style={styles.composerPlaceholder}>Start a post, {CURRENT_USER.name.split(" ")[0]}…</Text>
+              </Pressable>
+              <Pressable
+                style={styles.composerPhoto}
+                onPress={() => { setEditing(null); setCreatePostModalVisible(true); }}
+              >
+                <Feather name="image" size={18} color="#2563eb" />
+              </Pressable>
+            </View>
+            <View style={styles.quickRow}>
+              {QUICK.map((item) => (
+                <Pressable
+                  key={item.label}
+                  style={styles.quickChip}
+                  onPress={() => router.push("/(tabs)/explore")}
+                >
+                  <Feather name={item.icon} size={14} color="#2563eb" />
+                  <Text style={styles.quickLabel}>{item.label}</Text>
                 </Pressable>
-              </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+              ))}
+            </View>
+          </Animated.View>
+        }
+        renderItem={({ item }) => (
+          <FeedPostCard
+            item={item}
+            onOpenComments={(id) => setCommentsFor(id)}
+            onOpenShare={(id) => setShareFor(id)}
+            onOpenMore={(id, authorId) => setMoreFor({ id, authorId })}
+            onOpenDetail={(post) => setDetailPost(post)}
+            onEdit={openEdit}
+          />
+        )}
+        ListEmptyComponent={
+          <EmptyFeed tab={tab} />
+        }
+        contentContainerStyle={{ paddingBottom: 48 }}
+      />
+
+      <PostComposer
+        visible={composerVisible}
+        onClose={() => setComposerVisible(false)}
+        editing={editing ?? undefined}
+      />
+      <CreatePostModal
+        visible={createPostModalVisible}
+        onClose={() => setCreatePostModalVisible(false)}
+        onSuccess={() => console.log("Post created successfully")}
+        onError={(error) => console.error("Failed to create post:", error)}
+      />
+      {commentsFor ? (
+        <PostComments
+          postId={commentsFor}
+          visible
+          onClose={() => setCommentsFor(null)}
+        />
+      ) : null}
+      {moreFor ? (
+        <PostMoreMenu
+          visible
+          onClose={() => setMoreFor(null)}
+          postId={moreFor.id}
+          authorId={moreFor.authorId}
+          onEdit={() => {
+            setMoreFor(null);
+            openEdit(moreFor.id);
+          }}
+        />
+      ) : null}
+      {shareFor ? (
+        <PostShareSheet
+          visible
+          onClose={() => setShareFor(null)}
+          onRepost={() => {
+            const p = getPost(shareFor);
+            if (p) {
+              createPost({
+                content: p.content,
+                kind: p.kind,
+                visibility: "public",
+              });
+            }
+          }}
+          onShareWithComment={() => {
+            const p = getPost(shareFor);
+            if (p) {
+              setEditing(null);
+              setComposerVisible(true);
+            }
+          }}
+        />
+      ) : null}
+      <PostDetailModal
+        post={detailPost}
+        visible={!!detailPost}
+        onClose={() => setDetailPost(null)}
+        onOpenShare={(id) => setShareFor(id)}
+        onOpenMore={(id, authorId) => setMoreFor({ id, authorId })}
+        reactionState={{
+          reaction: detailPost?.reaction,
+          setReaction: (r) => detailPost && r && detailPost.id && setDetailPost({ ...detailPost, reaction: r }),
+          saved: detailPost?.saved ?? false,
+          onToggleSave: () => {},
+          onShare: () => {},
+        }}
+        getComments={getComments}
+        addComment={addComment}
+        toggleCommentLike={toggleCommentLike}
+        updateComment={updateComment}
+        deleteComment={deleteComment}
+        reportPost={reportPost}
+      />
     </View>
   );
 }
 
+function EmptyFeed({ tab }: { tab: TabKind }) {
+  return (
+    <View style={styles.emptyWrap}>
+      <Feather name="inbox" size={44} color="#cbd5e1" />
+      <Text style={styles.emptyTitle}>
+        {tab === "following" ? "Connect with more people" : "No posts match your search"}
+      </Text>
+      <Text style={styles.emptyText}>
+        {tab === "following"
+          ? "Posts from your network will appear here."
+          : "Try searching for a hashtag, person or topic."}
+      </Text>
+    </View>
+  );
+}
+
+const QUICK = [
+  { icon: "briefcase" as const, label: "Jobs" },
+  { icon: "award" as const, label: "Internships" },
+  { icon: "users" as const, label: "Network" },
+  { icon: "calendar" as const, label: "Events" },
+];
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f1f5f9",
+  },
+  top: {
     backgroundColor: "#ffffff",
+    paddingHorizontal: 14,
+    paddingBottom: 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#e2e8f0",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-    backgroundColor: "#ffffff",
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  headerLogo: {
-    width: 30,
-    height: 30,
-  },
-  headerTitle: {
-    fontSize: 19,
-    fontWeight: "800",
-    color: "#0b1f4b",
-    letterSpacing: -0.5,
-  },
-  headerRight: {
+  topRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
   },
-  iconButton: {
+  meAvatar: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+  },
+  meInitials: {
+    color: "#fff",
+    fontWeight: "800",
+    fontSize: 12,
+  },
+  searchBar: {
+    flex: 1,
+    height: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
     backgroundColor: "#f1f5f9",
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: "#0f172a",
+  },
+  bell: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
     position: "relative",
   },
   bellDot: {
     position: "absolute",
-    top: 9,
-    right: 10,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    top: 7,
+    right: 7,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: "#ef4444",
+    borderWidth: 1.5,
+    borderColor: "#fff",
   },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 32,
-  },
-  welcomeSection: {
-    marginBottom: 16,
-  },
-  greeting: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#0b1f4b",
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: "#64748b",
-    marginTop: 4,
-    lineHeight: 19,
-  },
-  searchWrapper: {
+  switcher: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f5f9",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 46,
-    marginBottom: 20,
+    marginTop: 10,
+    marginHorizontal: -4,
   },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    height: "100%",
-    fontSize: 14,
-    color: "#0b1f4b",
-  },
-  banner: {
-    flexDirection: "row",
-    backgroundColor: "#0d6efd",
-    borderRadius: 16,
-    padding: 18,
-    marginBottom: 24,
-    overflow: "hidden",
-    alignItems: "center",
-  },
-  bannerInfo: {
-    flex: 1,
-    gap: 12,
-  },
-  bannerTitle: {
-    fontSize: 15,
-    fontWeight: "800",
-    color: "#ffffff",
-    lineHeight: 21,
-  },
-  bannerButton: {
-    backgroundColor: "#ffffff",
-    paddingVertical: 8,
+  switchItem: {
     paddingHorizontal: 14,
-    borderRadius: 8,
-    alignSelf: "flex-start",
-  },
-  bannerButtonText: {
-    color: "#0d6efd",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  bannerArt: {
-    marginLeft: 12,
-    opacity: 0.8,
-  },
-  sectionContainer: {
-    marginBottom: 24,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    paddingVertical: 10,
     alignItems: "center",
-    marginBottom: 12,
+    position: "relative",
   },
-  sectionTitle: {
-    fontSize: 17,
-    fontWeight: "800",
-    color: "#0b1f4b",
-    letterSpacing: -0.2,
+  switchItemOn: {
+    backgroundColor: "transparent",
   },
-  seeAllText: {
-    fontSize: 13,
-    color: "#0d6efd",
-    fontWeight: "600",
+  switchUnderline: {
+    position: "absolute",
+    bottom: 0,
+    left: 12,
+    right: 12,
+    height: 2.5,
+    borderRadius: 2,
+    backgroundColor: "#2563eb",
   },
-  categoriesGrid: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 8,
-  },
-  categoryItem: {
+  switchSpacer: {
     flex: 1,
-    alignItems: "center",
   },
-  categoryIconWrapper: {
-    width: "100%",
-    height: 56,
-    borderRadius: 14,
-    backgroundColor: "#eff6ff",
-    borderWidth: 1,
-    borderColor: "#dbeafe",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 6,
-  },
-  categoryLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: "#475569",
-    textAlign: "center",
-  },
-  jobsList: {
-    gap: 10,
-  },
-  jobCard: {
-    flexDirection: "row",
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#e8edf4",
-    borderRadius: 14,
-    padding: 14,
-    alignItems: "center",
-  },
-  jobLogo: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  jobLogoText: {
+  switchText: {
     fontSize: 15,
-    fontWeight: "800",
-  },
-  jobInfo: {
-    flex: 1,
-    marginLeft: 12,
-    gap: 2,
-  },
-  jobTitle: {
-    fontSize: 14,
     fontWeight: "700",
-    color: "#0b1f4b",
-  },
-  jobCompany: {
-    fontSize: 12,
-    color: "#64748b",
-  },
-  jobMeta: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    marginTop: 1,
-  },
-  jobLocation: {
-    fontSize: 11,
     color: "#94a3b8",
   },
-  tagWrapper: {
-    alignSelf: "flex-start",
+  switchTextOn: {
+    color: "#0f172a",
+    fontWeight: "800",
+  },
+  composer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderBottomWidth: 8,
+    borderBottomColor: "#f1f5f9",
+  },
+  meAvatarSmall: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  meInitialsSmall: {
+    color: "#fff",
+    fontWeight: "800",
+    fontSize: 12,
+  },
+  composerInput: {
+    flex: 1,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    justifyContent: "center",
+    paddingHorizontal: 14,
+  },
+  composerPlaceholder: {
+    color: "#94a3b8",
+    fontSize: 14,
+  },
+  composerPhoto: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quickRow: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    backgroundColor: "#ffffff",
+    borderBottomWidth: 8,
+    borderBottomColor: "#f1f5f9",
+  },
+  quickChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
     backgroundColor: "#eff6ff",
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    borderRadius: 6,
-    marginTop: 5,
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
   },
-  jobTag: {
-    fontSize: 10,
-    fontWeight: "600",
-    color: "#0d6efd",
+  quickLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#2563eb",
   },
-  bookmarkButton: {
-    padding: 4,
+  emptyWrap: {
+    alignItems: "center",
+    paddingTop: 60,
+    paddingHorizontal: 32,
+    gap: 10,
+  },
+  emptyTitle: {
+    fontSize: 17,
+    fontWeight: "800",
+    color: "#0f172a",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  emptyText: {
+    fontSize: 13,
+    color: "#64748b",
+    textAlign: "center",
+    maxWidth: 320,
   },
 });
