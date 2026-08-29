@@ -38,6 +38,7 @@ export function MobileShowcase() {
                 width={150}
                 height={48}
                 className="h-12 w-[150px] object-cover"
+                unoptimized
               />
             </a>
 
@@ -52,6 +53,7 @@ export function MobileShowcase() {
                 width={150}
                 height={48}
                 className="h-12 w-[150px] object-cover"
+                unoptimized
               />
             </a>
           </div>

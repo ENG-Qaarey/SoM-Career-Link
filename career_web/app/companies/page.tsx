@@ -7,18 +7,18 @@ import { Testimonials } from "@/components/landing/testimonials";
 import { FinalCTA } from "@/components/landing/final-cta";
 
 export const metadata: Metadata = {
-  title: "Universities | CareerLink Somalia",
+  title: "Companies & Universities | CareerLink Somalia",
   description:
-    "Help students discover internships, graduate programs, career events and employer connections through CareerLink Somalia.",
+    "Help students, graduates, companies and universities discover internships, graduate programs, career events and employer connections through CareerLink Somalia.",
 };
 
 export default function UniversitiesPage() {
   return (
     <SiteShell>
       <PageHero
-        label="For Universities"
-        title="Connecting Universities With Career Opportunities"
-        subtitle="Support your students with stronger bridges between campus, employers and the opportunities that shape their futures."
+        label="For Companies & Universities"
+        title="Connecting Companies & Universities With Career Opportunities"
+        subtitle="Build stronger bridges between campus, companies and the opportunities that shape students' and graduates' futures."
       />
       <UniversitiesSection />
       <Partners />

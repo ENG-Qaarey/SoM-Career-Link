@@ -13,6 +13,7 @@ export function OpportunityCard({
 }: OpportunityCardProps) {
   const imageSrc = getOpportunityImage(job);
   const imageAlt = job.imageAlt ?? `${job.title} — ${job.company}`;
+  const isExternalImage = imageSrc.startsWith("http");
 
   return (
     <article className="cl-card flex h-full flex-col overflow-hidden p-0">
@@ -24,6 +25,7 @@ export function OpportunityCard({
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover"
+            unoptimized={isExternalImage}
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
           <span className="absolute left-3 top-3 rounded-md bg-black/45 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">

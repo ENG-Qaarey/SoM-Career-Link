@@ -1,241 +1,360 @@
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
+import Animated, { FadeIn, Layout } from "react-native-reanimated";
+import { ScreenHeader } from "@/components/screen-header";
+import { useApp } from "@/context/app-provider";
+import { TOP_SEVEN, CURRENT_USER, type PostKind, type PostVisibility } from "@/lib/data";
+import { PostCard } from "@/components/feed-post";
+import { PostComposer } from "@/components/post-composer";
+import { PostComments } from "@/components/post-comments";
+import { PostMoreMenu } from "@/components/post-more-menu";
 
 const SKILLS = ["JavaScript", "React Native", "UI/UX", "Teamwork"];
 
-type MenuItem = {
-  icon: "user" | "file-text" | "bell" | "settings" | "help-circle" | "log-out";
-  label: string;
-  danger?: boolean;
-  route?: string;
-};
-
-const MENU_ITEMS: MenuItem[] = [
-  { icon: "user", label: "Personal Information" },
-  { icon: "file-text", label: "My Resume & Documents" },
-  { icon: "bell", label: "Notifications" },
-  { icon: "settings", label: "Settings" },
-  { icon: "help-circle", label: "Help & Support" },
-];
-
 export default function ProfileScreen() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
+  const {
+    applications,
+    savedPostIds,
+    getMyPosts,
+    getPost,
+    setPostReaction,
+    togglePostSave,
+    sharePost,
+    applyTo,
+    hasApplied,
+    getOpportunity,
+  } = useApp();
 
-  const handleLogout = () => {
-    router.replace("/");
+  const [composerVisible, setComposerVisible] = useState(false);
+  const [editing, setEditing] = useState<null | {
+    id: string;
+    content: string;
+    kind: PostKind;
+    visibility: PostVisibility;
+  }>(null);
+  const [commentsFor, setCommentsFor] = useState<string | null>(null);
+  const [moreFor, setMoreFor] = useState<{ id: string; authorId: string } | null>(null);
+
+  const myPosts = getMyPosts();
+
+  const openEdit = (postId: string) => {
+    const p = getPost(postId);
+    if (!p) return;
+    setEditing({ id: p.id, content: p.content, kind: p.kind, visibility: p.visibility });
+    setComposerVisible(true);
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-        <Text style={styles.headerTitle}>Profile</Text>
-      </View>
-
+      <ScreenHeader title="Profile" />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Profile Card */}
-        <View style={styles.profileCard}>
-          <View style={[styles.portrait, { backgroundColor: "#0d6efd" }]}>
-            <Text style={styles.portraitText}>AH</Text>
+        <View style={styles.hero}>
+          <View style={[styles.portrait, { backgroundColor: CURRENT_USER.color }]}>
+            <Text style={styles.portraitText}>{CURRENT_USER.initials}</Text>
           </View>
-          <Text style={styles.profileName}>Ahmed Hassan</Text>
-          <Text style={styles.profileTitle}>
-            Frontend Developer · Mogadishu
-          </Text>
-
+          <Text style={styles.name}>{CURRENT_USER.name}</Text>
+          <Text style={styles.headline}>Software Engineering Student</Text>
+          <Text style={styles.meta}>Jazeera University · Mogadishu, Somalia</Text>
           <View style={styles.stats}>
             <View style={styles.stat}>
-              <Text style={styles.statValue}>3</Text>
+              <Text style={styles.statValue}>{applications.length}</Text>
               <Text style={styles.statLabel}>Applications</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.stat}>
-              <Text style={styles.statValue}>2</Text>
+              <Text style={styles.statValue}>{savedPostIds.length}</Text>
               <Text style={styles.statLabel}>Saved</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.stat}>
-              <Text style={styles.statValue}>4</Text>
-              <Text style={styles.statLabel}>Skills</Text>
+              <Text style={styles.statValue}>7</Text>
+              <Text style={styles.statLabel}>Top 7</Text>
             </View>
-          </View>
-
-          <View style={styles.skillsWrap}>
-            {SKILLS.map((s, idx) => (
-              <View key={idx} style={styles.skillPill}>
-                <Text style={styles.skillText}>{s}</Text>
-              </View>
-            ))}
+            <View style={styles.statDivider} />
+            <View style={styles.stat}>
+              <Text style={styles.statValue}>{myPosts.length}</Text>
+              <Text style={styles.statLabel}>Posts</Text>
+            </View>
           </View>
         </View>
 
-        {/* Menu */}
-        <View style={styles.menuCard}>
-          {MENU_ITEMS.map((item, idx) => (
-            <Pressable
-              key={item.label}
-              style={({ pressed }) => [
-                styles.menuRow,
-                idx < MENU_ITEMS.length - 1 && styles.menuRowBorder,
-                pressed && styles.menuRowPressed,
-              ]}
-            >
-              <View style={styles.menuIconWrap}>
-                <Feather name={item.icon} size={16} color="#0d6efd" />
+        <Text style={styles.section}>Top 7</Text>
+        <Text style={styles.sectionHint}>Seven important people in {CURRENT_USER.name.split(" ")[0]}&apos;s network</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.top7}>
+          {TOP_SEVEN.map((person, i) => (
+            <View key={person.id} style={styles.top7Card}>
+              <View style={[styles.top7Avatar, { backgroundColor: person.color }]}>
+                <Text style={styles.top7Initials}>{person.initials}</Text>
               </View>
-              <Text style={styles.menuLabel}>{item.label}</Text>
-              <Feather name="chevron-right" size={16} color="#94a3b8" />
-            </Pressable>
-          ))}
-          <Pressable
-            style={({ pressed }) => [styles.menuRow, pressed && styles.menuRowPressed]}
-            onPress={handleLogout}
-          >
-            <View style={[styles.menuIconWrap, { backgroundColor: "rgba(239,68,68,0.1)" }]}>
-              <Feather name="log-out" size={16} color="#ef4444" />
+              <Text style={styles.top7Name} numberOfLines={1}>
+                {person.name.split(" ")[0]}
+              </Text>
+              <Text style={styles.top7Role} numberOfLines={1}>
+                {person.role}
+              </Text>
+              <Text style={styles.top7Index}>{i + 1}</Text>
             </View>
-            <Text style={[styles.menuLabel, { color: "#ef4444" }]}>Logout</Text>
+          ))}
+        </ScrollView>
+
+        <Text style={styles.section}>About</Text>
+        <Text style={styles.about}>
+          Computer science student focused on frontend and mobile. Looking for internships
+          and graduate programs across Somalia.
+        </Text>
+
+        <Text style={styles.section}>Skills</Text>
+        <View style={styles.skills}>
+          {SKILLS.map((skill) => (
+            <View key={skill} style={styles.pill}>
+              <Text style={styles.pillText}>{skill}</Text>
+            </View>
+          ))}
+        </View>
+
+        <Text style={styles.section}>Education</Text>
+        <View style={styles.block}>
+          <Text style={styles.blockTitle}>BSc Computer Science</Text>
+          <Text style={styles.blockMeta}>Jazeera University · 2023 – 2027</Text>
+        </View>
+
+        <Text style={styles.section}>CV</Text>
+        <View style={styles.block}>
+          <Text style={styles.blockTitle}>Ahmed_Hassan_CV.pdf</Text>
+          <Text style={styles.blockMeta}>Uploaded for applications</Text>
+        </View>
+
+        <View style={styles.postsHeader}>
+          <Text style={styles.section}>Posts</Text>
+          <Pressable
+            onPress={() => { setEditing(null); setComposerVisible(true); }}
+            style={styles.newPostBtn}
+          >
+            <Feather name="plus" size={14} color="#fff" />
+            <Text style={styles.newPostText}>New</Text>
           </Pressable>
         </View>
+        {myPosts.length === 0 ? (
+          <View style={styles.emptyPosts}>
+            <Feather name="edit-3" size={32} color="#cbd5e1" />
+            <Text style={styles.emptyPostsTitle}>No posts yet</Text>
+            <Text style={styles.emptyPostsHint}>Share an achievement, opportunity or update with your network.</Text>
+            <Pressable
+              style={styles.emptyPostsBtn}
+              onPress={() => { setEditing(null); setComposerVisible(true); }}
+            >
+              <Text style={styles.emptyPostsBtnText}>Create your first post</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <Animated.View layout={Layout} style={{ gap: 12 }}>
+            {myPosts.map((post) => (
+              <Animated.View key={post.id} entering={FadeIn.duration(220)}>
+                <PostCard
+                  post={post}
+                  compact
+                  onOpenComments={(id) => setCommentsFor(id)}
+                  onOpenShare={(id) => { sharePost(id); }}
+                  onOpenMore={(id, authorId) => setMoreFor({ id, authorId })}
+                  onEdit={openEdit}
+                  reactionState={{
+                    reaction: post.reaction,
+                    setReaction: (r) => setPostReaction(post.id, r),
+                    saved: savedPostIds.includes(post.id),
+                    onToggleSave: () => togglePostSave(post.id),
+                    onShare: () => sharePost(post.id),
+                  }}
+                  getOpportunity={getOpportunity}
+                  applyTo={applyTo}
+                  hasApplied={hasApplied}
+                />
+              </Animated.View>
+            ))}
+          </Animated.View>
+        )}
+
+        <Pressable style={styles.menu} onPress={() => router.push("/notifications")}>
+          <Feather name="bell" size={18} color="#2563eb" />
+          <Text style={styles.menuLabel}>Notifications</Text>
+          <Feather name="chevron-right" size={18} color="#94a3b8" />
+        </Pressable>
+        <Pressable style={styles.menu} onPress={() => router.replace("/")}>
+          <Feather name="log-out" size={18} color="#ef4444" />
+          <Text style={[styles.menuLabel, { color: "#ef4444" }]}>Logout</Text>
+        </Pressable>
       </ScrollView>
+
+      <PostComposer
+        visible={composerVisible}
+        onClose={() => setComposerVisible(false)}
+        editing={editing ?? undefined}
+      />
+      {commentsFor ? (
+        <PostComments
+          postId={commentsFor}
+          visible
+          onClose={() => setCommentsFor(null)}
+        />
+      ) : null}
+      {moreFor ? (
+        <PostMoreMenu
+          visible
+          onClose={() => setMoreFor(null)}
+          postId={moreFor.id}
+          authorId={moreFor.authorId}
+          onEdit={() => {
+            setMoreFor(null);
+            openEdit(moreFor.id);
+          }}
+        />
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: { flex: 1, backgroundColor: "#f8fafc" },
+  content: { padding: 16, paddingBottom: 40 },
+  hero: {
     backgroundColor: "#ffffff",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-    backgroundColor: "#ffffff",
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "800",
-    letterSpacing: -0.4,
-    color: "#0b1f4b",
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 40,
-  },
-  profileCard: {
-    borderWidth: 1,
-    borderColor: "#e8edf4",
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
-    marginBottom: 16,
-    backgroundColor: "#f8fafc",
+    borderWidth: 1,
+    borderColor: "#eef2f7",
   },
   portrait: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
   },
-  portraitText: {
-    color: "#ffffff",
-    fontSize: 22,
+  portraitText: { color: "#fff", fontSize: 24, fontWeight: "800" },
+  name: { marginTop: 12, fontSize: 20, fontWeight: "800", color: "#0f172a" },
+  headline: { marginTop: 4, fontSize: 14, color: "#64748b" },
+  meta: { marginTop: 4, fontSize: 12, color: "#94a3b8" },
+  stats: { flexDirection: "row", marginTop: 18, width: "100%" },
+  stat: { flex: 1, alignItems: "center" },
+  statValue: { fontSize: 18, fontWeight: "800", color: "#0f172a" },
+  statLabel: { fontSize: 11, color: "#64748b", marginTop: 2 },
+  statDivider: { width: 1, backgroundColor: "#e2e8f0" },
+  section: {
+    marginTop: 22,
+    marginBottom: 8,
+    fontSize: 16,
     fontWeight: "800",
+    color: "#0f172a",
   },
-  profileName: {
-    fontSize: 18,
-    fontWeight: "800",
-    marginTop: 10,
-    color: "#0b1f4b",
-  },
-  profileTitle: {
-    fontSize: 12,
-    marginTop: 2,
-    color: "#64748b",
-  },
-  stats: {
-    flexDirection: "row",
+  sectionHint: { fontSize: 12, color: "#64748b", marginTop: -4, marginBottom: 10 },
+  top7: { gap: 10, paddingRight: 8 },
+  top7Card: {
+    width: 92,
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    padding: 10,
     alignItems: "center",
-    marginTop: 16,
-    width: "100%",
-  },
-  stat: {
-    flex: 1,
-    alignItems: "center",
-    gap: 2,
-  },
-  statValue: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: "#0b1f4b",
-  },
-  statLabel: {
-    fontSize: 10,
-    fontWeight: "600",
-    color: "#64748b",
-  },
-  statDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: "rgba(148, 163, 184, 0.25)",
-  },
-  skillsWrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-    marginTop: 16,
-  },
-  skillPill: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    backgroundColor: "rgba(13,110,253,0.1)",
-  },
-  skillText: {
-    fontSize: 11,
-    fontWeight: "700",
-    color: "#0d6efd",
-  },
-  menuCard: {
     borderWidth: 1,
-    borderColor: "#e8edf4",
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    backgroundColor: "#f8fafc",
+    borderColor: "#eef2f7",
   },
-  menuRow: {
+  top7Avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  top7Initials: { color: "#fff", fontWeight: "800", fontSize: 13 },
+  top7Name: { marginTop: 8, fontSize: 12, fontWeight: "700", color: "#0f172a" },
+  top7Role: { marginTop: 2, fontSize: 10, color: "#64748b", textAlign: "center" },
+  top7Index: { marginTop: 6, fontSize: 10, fontWeight: "800", color: "#2563eb" },
+  about: { fontSize: 14, lineHeight: 21, color: "#334155" },
+  skills: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  pill: {
+    backgroundColor: "#eff6ff",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  pillText: { color: "#2563eb", fontWeight: "700", fontSize: 12 },
+  block: {
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "#eef2f7",
+  },
+  blockTitle: { fontSize: 14, fontWeight: "700", color: "#0f172a" },
+  blockMeta: { marginTop: 4, fontSize: 12, color: "#64748b" },
+  postsHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    paddingVertical: 14,
+    justifyContent: "space-between",
+    marginTop: 22,
+    marginBottom: 8,
   },
-  menuRowBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(148, 163, 184, 0.12)",
-  },
-  menuRowPressed: {
-    opacity: 0.6,
-  },
-  menuIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    justifyContent: "center",
+  newPostBtn: {
+    flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(13,110,253,0.08)",
+    gap: 4,
+    backgroundColor: "#2563eb",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 14,
   },
-  menuLabel: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#0b1f4b",
+  newPostText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 12,
   },
+  emptyPosts: {
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#eef2f7",
+    gap: 6,
+  },
+  emptyPostsTitle: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: "#0f172a",
+    marginTop: 8,
+  },
+  emptyPostsHint: {
+    fontSize: 12,
+    color: "#64748b",
+    textAlign: "center",
+    maxWidth: 280,
+  },
+  emptyPostsBtn: {
+    marginTop: 10,
+    backgroundColor: "#eff6ff",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 14,
+  },
+  emptyPostsBtnText: {
+    color: "#2563eb",
+    fontWeight: "700",
+    fontSize: 13,
+  },
+  menu: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "#eef2f7",
+  },
+  menuLabel: { flex: 1, fontSize: 14, fontWeight: "600", color: "#0f172a" },
 });

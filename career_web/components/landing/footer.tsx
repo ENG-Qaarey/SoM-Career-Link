@@ -19,7 +19,7 @@ const COLUMNS = [
     links: [
       { label: "About Us", href: routes.about },
       { label: "For Students & Employers", href: routes.studentsEmployers },
-      { label: "For Universities", href: routes.universities },
+      { label: "For Companies & Universities", href: routes.universities },
       { label: "Career Resources", href: routes.resources },
       { label: "Top 7", href: routes.top7 },
     ],

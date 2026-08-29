@@ -1,0 +1,21 @@
+{
+  "name": "CareerLink Somalia",
+  "short_name": "CareerLink",
+  "description": "Discover internships, graduate programs, entry-level jobs and career opportunities with CareerLink Somalia.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f9fc",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/brand/careerlink-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "business", "productivity"],
+  "lang": "en",
+  "dir": "ltr"
+}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth/auth-shell";
-import { RegisterForm } from "@/components/auth/register-form";
+import AuthSectionOne from "@/components/ui/auth-section-1";
 
 export const metadata: Metadata = {
   title: "Create Account | CareerLink Somalia",
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <AuthShell>
-      <RegisterForm />
+    <AuthShell footer={false} navbar={false}>
+      <AuthSectionOne mode="register" />
     </AuthShell>
   );
 }

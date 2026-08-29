@@ -1,97 +1,86 @@
 import { Tabs } from "expo-router";
-import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { View, StyleSheet, Platform } from "react-native";
+import { useApp } from "@/context/app-provider";
 
-const ACTIVE_TINT = "#0d6efd";
+const ACTIVE = "#2563eb";
+const INACTIVE = "#94a3b8";
 
-type IconName = keyof typeof Feather.glyphMap;
+type IoniconName = keyof typeof Ionicons.glyphMap;
 
 function TabIcon({
   focused,
-  name,
-  color,
-  size,
+  active,
+  inactive,
 }: {
   focused: boolean;
-  name: IconName;
-  color: string;
-  size: number;
+  active: IoniconName;
+  inactive: IoniconName;
 }) {
   return (
-    <View style={styles.iconWrapper}>
-      <Feather name={name} size={size} color={focused ? ACTIVE_TINT : color} />
+    <View style={styles.iconWrap}>
+      <Ionicons name={focused ? active : inactive} size={22} color={focused ? ACTIVE : INACTIVE} />
     </View>
   );
 }
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
-
-  const bottomPadding = Math.max(16, insets.bottom);
+  const { unreadMessages } = useApp();
+  const bottom = Math.max(insets.bottom, 10);
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: ACTIVE_TINT,
-        tabBarInactiveTintColor: "#64748b",
         headerShown: false,
         tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: ACTIVE,
+        tabBarInactiveTintColor: INACTIVE,
         tabBarStyle: {
           backgroundColor: "#ffffff",
-          borderTopWidth: 1,
-          borderTopColor: "#e2e8f0",
-          boxShadow: "0 -4px 16px rgba(0,0,0,0.06)",
-          elevation: 8,
-          paddingTop: 2,
-          position: "fixed",
-          paddingBottom: bottomPadding,
-          paddingHorizontal: 8,
-          height: 64 + bottomPadding,
-        },
-        tabBarItemStyle: {
-          paddingVertical: 4,
-          paddingHorizontal: 2,
+          borderTopWidth: 0,
+          height: 62 + bottom,
+          paddingTop: 8,
+          paddingBottom: bottom,
+          shadowColor: "#0b1f4b",
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
+          shadowOffset: { width: 0, height: -4 },
+          elevation: 16,
         },
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: "600",
-          marginTop: 3,
-          fontFamily: Platform.select({
-            ios: "SF Pro Text",
-            android: "Roboto",
-            default: "System",
-          }),
-        },
-        tabBarIconStyle: {
           marginTop: 2,
         },
       }}
     >
+      <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen
         name="home"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIcon focused={focused} name="home" color={color} size={size} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} active="home" inactive="home-outline" />
           ),
         }}
       />
       <Tabs.Screen
-        name="saved"
+        name="explore"
         options={{
-          title: "Saved",
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIcon focused={focused} name="bookmark" color={color} size={size} />
+          title: "Explore",
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} active="search" inactive="search-outline" />
           ),
         }}
       />
       <Tabs.Screen
-        name="applications"
+        name="posts"
         options={{
-          title: "Applications",
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIcon focused={focused} name="briefcase" color={color} size={size} />
+          title: "Posts",
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} active="newspaper" inactive="newspaper-outline" />
           ),
         }}
       />
@@ -99,8 +88,9 @@ export default function TabLayout() {
         name="messages"
         options={{
           title: "Messages",
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIcon focused={focused} name="message-square" color={color} size={size} />
+          tabBarBadge: unreadMessages > 0 ? unreadMessages : undefined,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} active="chatbubble" inactive="chatbubble-outline" />
           ),
         }}
       />
@@ -108,8 +98,8 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIcon focused={focused} name="user" color={color} size={size} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} active="person" inactive="person-outline" />
           ),
         }}
       />
@@ -118,7 +108,9 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  iconWrapper: {
+  iconWrap: {
+    width: 36,
+    height: 28,
     alignItems: "center",
     justifyContent: "center",
   },

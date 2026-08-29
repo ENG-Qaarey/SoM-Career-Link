@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "project": {
+    "name": "career_web",
+    "productType": null,
+    "stack": [
+      "nextjs",
+      "react",
+      "tailwind-v4"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "app/globals.css"
+    ],
+    "components": [
+      "components/ui"
+    ],
+    "assets": [
+      "public/brand"
+    ],
+    "instructions": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light-and-dark",
+    "colors": {
+      "--background": {
+        "value": "#f7f9fc",
+        "source": "app/globals.css"
+      },
+      "--foreground": {
+        "value": "#0b1f4b",
+        "source": "app/globals.css"
+      },
+      "--cl-secondary": {
+        "value": "#f4f7fb",
+        "source": "app/globals.css"
+      },
+      "--cl-accent": {
+        "value": "#2563eb",
+        "source": "app/globals.css"
+      },
+      "--cl-muted": {
+        "value": "#64748b",
+        "source": "app/globals.css"
+      },
+      "--cl-border": {
+        "value": "#e2e8f0",
+        "source": "app/globals.css"
+      },
+      "--color-background": {
+        "value": "var(--background)",
+        "source": "app/globals.css"
+      },
+      "--color-foreground": {
+        "value": "var(--foreground)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-main": {
+        "value": "var(--cl-main)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-secondary": {
+        "value": "var(--cl-secondary)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-elevated": {
+        "value": "var(--cl-elevated)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-blue-section": {
+        "value": "var(--cl-blue-section)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-blue": {
+        "value": "var(--cl-blue)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-blue-bright": {
+        "value": "var(--cl-blue-bright)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-accent": {
+        "value": "var(--cl-accent)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-blue-hover": {
+        "value": "var(--cl-blue-hover)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-navy": {
+        "value": "var(--cl-navy)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-text": {
+        "value": "var(--cl-text)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-muted": {
+        "value": "var(--cl-muted)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-border": {
+        "value": "var(--cl-border)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-blue-light": {
+        "value": "var(--cl-blue-light)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-success": {
+        "value": "var(--cl-success)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-card": {
+        "value": "var(--cl-card)",
+        "source": "app/globals.css"
+      },
+      "--color-cl-bg": {
+        "value": "var(--cl-bg)",
+        "source": "app/globals.css"
+      }
+    },
+    "typography": {
+      "--cl-text": {
+        "value": "#0b1f4b",
+        "source": "app/globals.css"
+      },
+      "--font-sans": {
+        "value": "var(--font-inter)",
+        "source": "app/globals.css"
+      }
+    },
+    "spacing": {},
+    "radius": {},
+    "shadows": {
+      "--shadow-card": {
+        "value": "0 14px 36px rgba(11, 31, 75, 0.08)",
+        "source": "app/globals.css"
+      }
+    },
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [
+      "button",
+      "motion-section",
+      "section-heading",
+      "starfall-demo",
+      "starfall-portfolio-landing"
+    ],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [],
+    "avoid": []
+  },
+  "decisions": [],
+  "evidence": [
+    {
+      "fact": "components.installed",
+      "source": "components/ui"
+    },
+    {
+      "fact": "design.colorMode:light-and-dark",
+      "source": "app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "CLAUDE.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-08-22T21:49:15.295Z"
+}

@@ -589,14 +589,14 @@ export function LandingContent() {
         </div>
       </section>
 
-      <section id="universities" className="landing-section py-16 sm:py-20">
+      <section id="companies" className="landing-section py-16 sm:py-20">
         <div className="cl-container grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <Reveal>
             <h2 className="cl-heading text-3xl sm:text-4xl">
-              Connecting Universities With Career Opportunities
+              Connecting Companies & Universities With Career Opportunities
             </h2>
             <p className="cl-subtext mt-4 text-base sm:text-lg">
-              Universities can help students discover internships, graduate programs, career
+              Companies and universities can help students discover internships, graduate programs, career
               events and employment opportunities through CareerLink Somalia.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -612,7 +612,7 @@ export function LandingContent() {
               ))}
             </div>
             <a href="#join" className="cl-btn cl-btn-primary mt-8">
-              Join as a University
+              Join as a Company or University
               <ArrowRight size={18} />
             </a>
           </Reveal>

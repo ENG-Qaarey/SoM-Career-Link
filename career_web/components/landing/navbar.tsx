@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, Home, Briefcase, Users, Landmark, BookOpen, Info } from "lucide-react";
+import { Menu, X, Home, Briefcase, Landmark, BookOpen, Info, MessageSquare } from "lucide-react";
 import { routes } from "@/lib/routes";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_LINKS = [
   { label: "Home", href: routes.home, icon: Home },
+  { label: "Posts", href: routes.feed, icon: MessageSquare },
   { label: "Opportunities", href: routes.opportunities, icon: Briefcase },
-  { label: "For Students & Employers", href: routes.studentsEmployers, icon: Users },
-  { label: "Universities", href: routes.universities, icon: Landmark },
+  { label: "Companies", href: routes.universities, icon: Landmark },
   { label: "Career Resources", href: routes.resources, icon: BookOpen },
   { label: "About Us", href: routes.about, icon: Info },
 ];
